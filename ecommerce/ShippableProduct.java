@@ -7,6 +7,9 @@ public class ShippableProduct extends Product implements Shippable {
 
     public ShippableProduct(String name, double price, int quantity, double weightKg, LocalDate expirationDate) {
         super(name, price, quantity, expirationDate);
+        if (weightKg <= 0) {
+            throw new IllegalArgumentException("Product weight must be positive");
+        }
         this.weightKg = weightKg;
     }
 

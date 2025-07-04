@@ -7,9 +7,14 @@ import ecommerce.dto.CartDTO;
 
 public class CheckoutService {
     public void checkout(Customer customer) {
+        if (customer == null) {
+            throw new IllegalArgumentException("Customer cannot be null");
+        }
+
         Cart cart = customer.getCart();
 
-        if (cart.isEmpty()) throw new IllegalStateException("Error: Cart is empty");
+        if (cart.isEmpty())
+            throw new IllegalStateException("Error: Cart is empty");
 
         double subtotal = 0;
         List<Shippable> toShip = new ArrayList<>();
@@ -48,15 +53,18 @@ public class CheckoutService {
 
         // console output
         System.out.println("** Checkout receipt **");
-        System.out.println("Customer Name: \t" + customer.getName());
-        for (CartDTO item :  cart.getItems()) {
-            System.out.println(item.quantity + "x " + item.product.getName() + "\t" + item.product.getPrice() * item.quantity);
+        System.out.printf("%-20s %s%n", "Customer Name:", customer.getName());
+        for (CartDTO item : cart.getItems()) {
+            System.out.printf("%dx %-15s %8.2f%n",
+                    item.quantity,
+                    item.product.getName(),
+                    item.product.getPrice() * item.quantity);
         }
         System.out.println("----------------------");
-        System.out.println("Subtotal: \t" + subtotal);
-        System.out.println("Shipping: \t" + shippingFee);
-        System.out.println("Total Paid: \t" + total);
-        System.out.println("Remaining Balance: \t" + customer.getBalance());
+        System.out.printf("%-20s %8.2f%n", "Subtotal:", subtotal);
+        System.out.printf("%-20s %8.2f%n", "Shipping:", shippingFee);
+        System.out.printf("%-20s %8.2f%n", "Total Paid:", total);
+        System.out.printf("%-20s %8.2f%n", "Remaining Balance:", customer.getBalance());
 
         cart.clear();
     }

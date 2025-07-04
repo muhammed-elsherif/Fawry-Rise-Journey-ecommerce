@@ -12,6 +12,15 @@ public class Cart {
         if (product == null) {
             throw new IllegalArgumentException("Product cannot be null");
         }
+        if (product.getName() == null || product.getName().trim().isEmpty()) {
+            throw new IllegalArgumentException("Product name cannot be empty");
+        }
+        if (product.getPrice() < 0) {
+            throw new IllegalArgumentException("Product price cannot be negative");
+        }
+        if (product.getQuantity() == 0) {
+            throw new IllegalArgumentException("Product out of stock");
+        }
         if (quantity <= 0) {
             throw new IllegalArgumentException("Quantity must be positive");
         }
@@ -21,6 +30,14 @@ public class Cart {
         if (product.isExpired()) {
             throw new IllegalArgumentException("Product " + product.getName() + " is expired");
         }
+
+        // Check for duplicate products
+        for (CartDTO existingItem : items) {
+            if (existingItem.product.getName().equals(product.getName())) {
+                throw new IllegalArgumentException("Product " + product.getName() + " already in cart");
+            }
+        }
+
         items.add(new CartDTO(product, quantity));
     }
 
@@ -36,4 +53,3 @@ public class Cart {
         items.clear();
     }
 }
-
